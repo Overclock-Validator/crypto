@@ -1,4 +1,4 @@
-module golang.org/x/crypto
+module github.com/Overclock-Validator/crypto
 
 go 1.20
 
