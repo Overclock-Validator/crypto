@@ -27,6 +27,7 @@ package bn256
 
 import (
 	"crypto/rand"
+	"encoding/hex"
 	"io"
 	"math/big"
 )
@@ -112,8 +113,14 @@ func (e *G1) Marshal() []byte {
 
 	e.p.MakeAffine(nil)
 
+	hex.Dump(e.p.x.Bytes())
+	hex.Dump(e.p.y.Bytes())
+
 	xBytes := new(big.Int).Mod(e.p.x, p).Bytes()
 	yBytes := new(big.Int).Mod(e.p.y, p).Bytes()
+
+	hex.Dump(xBytes)
+	hex.Dump(yBytes)
 
 	ret := make([]byte, numBytes*2)
 	copy(ret[1*numBytes-len(xBytes):], xBytes)
