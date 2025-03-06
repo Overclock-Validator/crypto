@@ -393,6 +393,24 @@ func Pair(g1 *G1, g2 *G2) *GT {
 	return &GT{optimalAte(g2.p, g1.p, new(bnPool))}
 }
 
+func PairingCheck(a []*G1, b []*G2) bool {
+	pool := new(bnPool)
+
+	acc := newGFp12(pool)
+	acc.SetOne()
+
+	for i := 0; i < len(a); i++ {
+		if a[i].p.IsInfinity() || b[i].p.IsInfinity() {
+			continue
+		}
+		acc.Mul(acc, miller(b[i].p, a[i].p, pool), pool)
+	}
+	ret := finalExponentiation(acc, pool)
+	acc.Put(pool)
+
+	return ret.IsOne()
+}
+
 // bnPool implements a tiny cache of *big.Int objects that's used to reduce the
 // number of allocations made during processing.
 type bnPool struct {
